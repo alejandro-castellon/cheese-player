@@ -12,7 +12,7 @@ const Navbar = async (props: Props) => {
       <aside className="flex items-center gap-4">
         <Link href="/">
           <Image
-            src="/cheeseplayer.jpg"
+            src="/cheeseplayer.png"
             width={55}
             height={34}
             alt="CheesePlayer logo"
