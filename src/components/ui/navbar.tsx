@@ -8,7 +8,7 @@ type Props = {};
 
 const Navbar = async (props: Props) => {
   return (
-    <header className="fixed right-0 left-0 top-0 py-2 px-8 backdrop-blur-lg z-[100] flex items-center border-b-[1px] border-blue-900 justify-between">
+    <header className="fixed right-0 left-0 top-0 py-2 px-8 backdrop-blur-lg z-[100] flex items-center border-b-[1px] border-neutral-600 justify-between">
       <aside className="flex items-center gap-4">
         <Link href="/">
           <Image

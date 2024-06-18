@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useState, useRef, useEffect } from "react";
-import { songs } from "@/lib/songs";
+import { songs } from "@/lib/data";
 
 export const Song = () => {
   const [play, setPlay] = useState(false);
