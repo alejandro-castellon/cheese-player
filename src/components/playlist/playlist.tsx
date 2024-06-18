@@ -8,11 +8,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
+import Link from "next/link";
+import { PlayCircle } from "lucide-react";
 import { songs } from "@/lib/data";
 
 export const Playlist = () => {
   return (
-    <main>
+    <>
       <section className="flex">
         <Image
           width={250}
@@ -35,15 +37,25 @@ export const Playlist = () => {
         </TableHeader>
         <TableBody>
           {songs.map((song) => (
-            <TableRow key={song.id}>
-              <TableCell className="font-medium">{song.id}</TableCell>
-              <TableCell>{song.title}</TableCell>
+            <TableRow key={song.id} className="group">
+              <TableCell className="font-medium relative">
+                <span className="group-hover:hidden">{song.id}</span>
+                <button>
+                  <PlayCircle
+                    className="hidden group-hover:block absolute inset-0 m-auto"
+                    size={22}
+                  />
+                </button>
+              </TableCell>
+              <TableCell className="hover:underline">
+                <Link href={`/playlist/song`}>{song.title}</Link>
+              </TableCell>
               <TableCell>{song.artist}</TableCell>
               <TableCell className="text-right">2:40</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </main>
+    </>
   );
 };

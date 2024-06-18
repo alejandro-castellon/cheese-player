@@ -36,15 +36,11 @@ export const PlaylistContainer: React.FC<{ name: string; summary: string }> = ({
           />
         </CardItem>
         <div className="flex justify-between items-center mt-8">
-          <CardItem
-            translateZ={20}
-            as="button"
-            className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
-          >
+          <div className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white">
             <Toggle>
               <Heart />
             </Toggle>
-          </CardItem>
+          </div>
           <CardItem
             translateZ={20}
             as={Link}

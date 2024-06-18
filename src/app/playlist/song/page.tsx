@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/ui/theme-toggle";
 import { Song } from "@/components/song/song";
 export default function Home() {
   return (
