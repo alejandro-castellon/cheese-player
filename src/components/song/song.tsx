@@ -11,33 +11,47 @@ import {
   VolumeX,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { songs } from "@/lib/data";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import {
+  togglePlay,
+  setVolume,
+  setPreviousVolume,
+  setProgress,
+  setIsSeeking,
+  setCurrentSongIndex,
+} from "@/redux/playerSlice";
 
 export const Song = () => {
-  const [play, setPlay] = useState(false);
-  const [volume, setVolume] = useState(50);
-  const [previousVolume, setPreviousVolume] = useState(volume);
-  const [progress, setProgress] = useState(0);
-  const [isSeeking, setIsSeeking] = useState(false);
-  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    play,
+    volume,
+    previousVolume,
+    progress,
+    isSeeking,
+    currentSongIndex,
+  } = useSelector((state: RootState) => state.player);
+
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const togglePlay = () => {
+  const togglePlayHandler = () => {
     if (audioRef.current) {
       if (play) {
         audioRef.current.pause();
       } else {
         audioRef.current.play();
       }
-      setPlay(!play);
+      dispatch(togglePlay());
     }
   };
 
   const handleVolumeChange = (value: number[]) => {
     if (audioRef.current) {
       audioRef.current.volume = value[0] / 100;
-      setVolume(value[0]);
+      dispatch(setVolume(value[0]));
     }
   };
 
@@ -45,20 +59,20 @@ export const Song = () => {
     if (audioRef.current) {
       if (audioRef.current.muted || volume === 0) {
         audioRef.current.muted = false;
-        setVolume(previousVolume);
+        dispatch(setVolume(previousVolume));
         if (audioRef.current) {
           audioRef.current.volume = previousVolume / 100;
         }
       } else {
-        setPreviousVolume(volume);
+        dispatch(setPreviousVolume(volume));
         audioRef.current.muted = true;
-        setVolume(0);
+        dispatch(setVolume(0));
       }
     }
   };
 
   const handleProgressChange = (value: number[]) => {
-    setProgress(value[0]);
+    dispatch(setProgress(value[0]));
     if (audioRef.current && isSeeking) {
       audioRef.current.currentTime =
         (value[0] / 100) * audioRef.current.duration;
@@ -73,7 +87,7 @@ export const Song = () => {
       const rect = slider.getBoundingClientRect();
       const offsetX = event.clientX - rect.left;
       const newProgress = (offsetX / rect.width) * 100;
-      setProgress(newProgress);
+      dispatch(setProgress(newProgress));
       audioRef.current.currentTime =
         (newProgress / 100) * audioRef.current.duration;
     }
@@ -83,7 +97,7 @@ export const Song = () => {
     if (audioRef.current) {
       const currentProgress =
         (audioRef.current.currentTime / audioRef.current.duration) * 100;
-      setProgress(currentProgress);
+      dispatch(setProgress(currentProgress));
     }
   };
 
@@ -91,7 +105,7 @@ export const Song = () => {
     if (audioRef.current && play) {
       audioRef.current.pause();
     }
-    setIsSeeking(true);
+    dispatch(setIsSeeking(true));
   };
 
   const handleSeekEnd = () => {
@@ -102,16 +116,16 @@ export const Song = () => {
         audioRef.current.play();
       }
     }
-    setIsSeeking(false);
+    dispatch(setIsSeeking(false));
   };
 
   const skipForward = () => {
-    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
+    dispatch(setCurrentSongIndex((currentSongIndex + 1) % songs.length));
   };
 
   const skipBack = () => {
-    setCurrentSongIndex(
-      (prevIndex) => (prevIndex - 1 + songs.length) % songs.length
+    dispatch(
+      setCurrentSongIndex((currentSongIndex - 1 + songs.length) % songs.length)
     );
   };
 
@@ -139,7 +153,7 @@ export const Song = () => {
       if (play) {
         audioRef.current.play();
       }
-      setProgress(0); // Reset progress when changing song
+      dispatch(setProgress(0)); // Reset progress when changing song
     }
   }, [currentSongIndex]);
 
@@ -168,11 +182,11 @@ export const Song = () => {
       </div>
       <div>{songs[currentSongIndex].artist}</div>
       <div>{songs[currentSongIndex].title}</div>
-      <section className="flex">
+      <section>
         <Button variant="outline" size="icon" onClick={skipBack}>
           <SkipBack className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon" onClick={togglePlay}>
+        <Button variant="outline" size="icon" onClick={togglePlayHandler}>
           {play ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </Button>
         <Button variant="outline" size="icon" onClick={skipForward}>

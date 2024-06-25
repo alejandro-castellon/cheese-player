@@ -9,3 +9,12 @@ export interface Playlist {
   name: string;
   summary: string;
 }
+
+export interface PlayerState {
+  play: boolean;
+  volume: number;
+  previousVolume: number;
+  progress: number;
+  isSeeking: boolean;
+  currentSongIndex: number;
+}
